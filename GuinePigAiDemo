@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Guinea Pig AI</title>
+  <style>
+    body{font-family:system-ui;text-align:center;margin-top:10vh;background:#fff9e6}
+    input{width:60%;padding:8px;font-size:18px}
+    button{padding:10px 20px;font-size:18px;margin-left:8px}
+    #bar{margin-top:30px;font-size:20px}
+    #dl{margin-top:20px;font-size:22px;color:#d63384}
+  </style>
+</head>
+<body>
+  <h1>🐹 Guinea Pig AI</h1>
+  <p>Type anything guinea-pig related → get a 5-second video in ~2 min</p>
+  <input id="p" placeholder='e.g.  Make a video of a guinea pig walking'/>
+  <button onclick="go()">Create</button>
+  <div id="bar"></div>
+  <a id="dl" style="display:none">Download MP4</a>
+
+  <script>
+    async function go(){
+      bar.innerHTML='<img src="https://i.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" width="120"><br>Creating…';
+      dl.style.display='none';
+      const r = await fetch('/api/create',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({prompt:p.value})
+      });
+      const j = await r.json();
+      if(j.url){
+        bar.innerHTML='';
+        dl.href=j.url;
+        dl.download='guinea_pig.mp4';
+        dl.style.display='inline';
+      }else{
+        bar.innerText='Sorry, something went wrong – refresh and try again';
+      }
+    }
+  </script>
+</body>
+</html>
